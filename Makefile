@@ -1,3 +1,5 @@
+.PHONY: all clean test
+
 all:
 	$(CC) -Wall -Wextra -pedantic -D_GNU_SOURCE -nostartfiles -shared -fpic -fPIC \
 		-Wconversion -Wshadow \
@@ -8,3 +10,6 @@ all:
 
 clean:
 	-@rm libenospace.so
+
+test:
+	@env LD_LIBRARY_PATH=. bats test
