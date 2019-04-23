@@ -61,6 +61,7 @@ void _init(void) {
   char *env_avail;
   char *env_opt;
   char *env_errno;
+  char *endptr;
 
   debug = getenv("LIBENOSPACE_DEBUG");
 
@@ -68,10 +69,15 @@ void _init(void) {
 
   if (env_avail != NULL) {
     errno = 0;
-    avail = (size_t)strtoul(env_avail, NULL, 10);
+    avail = (size_t)strtoul(env_avail, &endptr, 10);
     if (errno != 0) {
       (void)fprintf(stderr, "libenospace:avail:%s:%s\n", env_avail,
                     strerror(errno));
+    }
+
+    if ((endptr == env_avail) || *endptr != '\0') {
+      errno = EINVAL;
+      _exit(111);
     }
   }
 
@@ -79,10 +85,15 @@ void _init(void) {
 
   if (env_errno != NULL) {
     errno = 0;
-    libenospace_errno = (int)strtol(env_errno, NULL, 10);
+    libenospace_errno = (int)strtol(env_errno, &endptr, 10);
     if (errno != 0) {
       (void)fprintf(stderr, "libenospace:errno:%s:%s\n", env_errno,
                     strerror(errno));
+    }
+
+    if ((endptr == env_errno) || *endptr != '\0') {
+      errno = EINVAL;
+      _exit(111);
     }
   }
 
