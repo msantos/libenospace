@@ -70,13 +70,16 @@ void _init(void) {
   if (env_avail != NULL) {
     errno = 0;
     avail = (size_t)strtoul(env_avail, &endptr, 10);
-    if (errno != 0) {
-      (void)fprintf(stderr, "libenospace:avail:%s:%s\n", env_avail,
-                    strerror(errno));
-    }
 
     if ((endptr == env_avail) || *endptr != '\0') {
       errno = EINVAL;
+    }
+
+    if (errno != 0) {
+      if (debug)
+        (void)fprintf(stderr, "libenospace:avail:%s:%s\n", env_avail,
+                      strerror(errno));
+
       _exit(111);
     }
   }
@@ -86,13 +89,16 @@ void _init(void) {
   if (env_errno != NULL) {
     errno = 0;
     libenospace_errno = (int)strtol(env_errno, &endptr, 10);
-    if (errno != 0) {
-      (void)fprintf(stderr, "libenospace:errno:%s:%s\n", env_errno,
-                    strerror(errno));
-    }
 
     if ((endptr == env_errno) || *endptr != '\0') {
       errno = EINVAL;
+    }
+
+    if (errno != 0) {
+      if (debug)
+        (void)fprintf(stderr, "libenospace:errno:%s:%s\n", env_errno,
+                      strerror(errno));
+
       _exit(111);
     }
   }
@@ -192,9 +198,8 @@ int quota(int fd) {
     size_t free = 100 * fs.f_bavail / fs.f_blocks;
 
     if (debug)
-      (void)fprintf(stderr,
-                    "avail:%lu free:%lu f_blocks:%lu f_bsize:%ld "
-                    "f_bavail:%lu total:%lu\n",
+      (void)fprintf(stderr, "avail:%lu free:%lu f_blocks:%lu f_bsize:%ld "
+                            "f_bavail:%lu total:%lu\n",
                     (long unsigned)avail, (long unsigned)free,
                     (long unsigned)fs.f_blocks, (long)fs.f_bsize, fs.f_bavail,
                     (unsigned)fs.f_bsize * fs.f_bavail);
