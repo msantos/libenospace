@@ -119,33 +119,33 @@ void _init(void) {
   if (opt == LIBENOSPACE_OPT_PERCENT && avail > 100)
     avail = 100;
 
-#pragma GCC diagnostic ignored "-pedantic"
+#pragma GCC diagnostic ignored "-Wpedantic"
   sys_write = dlsym(RTLD_NEXT, "write");
-#pragma GCC diagnostic warning "-pedantic"
+#pragma GCC diagnostic warning "-Wpedantic"
   err = dlerror();
 
   if (err != NULL)
     (void)fprintf(stderr, "libenospace:dlsym (write):%s\n", err);
 
-#pragma GCC diagnostic ignored "-pedantic"
+#pragma GCC diagnostic ignored "-Wpedantic"
   sys_writev = dlsym(RTLD_NEXT, "writev");
-#pragma GCC diagnostic warning "-pedantic"
+#pragma GCC diagnostic warning "-Wpedantic"
   err = dlerror();
 
   if (err != NULL)
     (void)fprintf(stderr, "libenospace:dlsym (writev):%s\n", err);
 
-#pragma GCC diagnostic ignored "-pedantic"
+#pragma GCC diagnostic ignored "-Wpedantic"
   sys_pwrite = dlsym(RTLD_NEXT, "pwrite");
-#pragma GCC diagnostic warning "-pedantic"
+#pragma GCC diagnostic warning "-Wpedantic"
   err = dlerror();
 
   if (err != NULL)
     (void)fprintf(stderr, "libenospace:dlsym (pwrite):%s\n", err);
 
-#pragma GCC diagnostic ignored "-pedantic"
+#pragma GCC diagnostic ignored "-Wpedantic"
   sys_pwritev = dlsym(RTLD_NEXT, "pwritev");
-#pragma GCC diagnostic warning "-pedantic"
+#pragma GCC diagnostic warning "-Wpedantic"
   err = dlerror();
 
   if (err != NULL)

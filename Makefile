@@ -1,7 +1,8 @@
 .PHONY: all clean test
 
 all:
-	$(CC) -Wall -Wextra -pedantic -D_GNU_SOURCE -nostartfiles -shared -fpic -fPIC \
+	$(CC) -Wall -Wextra -Wpedantic -D_GNU_SOURCE -nostartfiles -shared \
+	 	-fpic -fPIC \
 		-Wconversion -Wshadow \
 		-Wpointer-arith -Wcast-qual \
 		-Wstrict-prototypes -Wmissing-prototypes \
