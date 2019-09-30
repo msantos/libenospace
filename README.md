@@ -53,7 +53,11 @@ Limitations
   libenospace will not work with statically linked programs or programs
   that directly make syscalls.
 
-* currently libenospace only enforces usage limits on extfs and ecryptfs
+* currently libenospace only enforces usage limits on:
+
+    * extfs (ext2, ext3, ext4)
+    * ecryptfs
+    * btrfs
 
 * usage limits apply to all filesystems the program accesses
 

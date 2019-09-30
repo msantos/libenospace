@@ -172,6 +172,9 @@ int quota(int fd) {
   switch (fs.f_type) {
   case EXT4_SUPER_MAGIC:
   case ECRYPTFS_SUPER_MAGIC:
+#ifdef BTRFS_SUPER_MAGIC
+  case BTRFS_SUPER_MAGIC:
+#endif
     break;
 
   default:
