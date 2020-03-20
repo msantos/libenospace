@@ -16,10 +16,12 @@ make
 Example
 -------
 
+    # simulate a full disk
     LD_PRELOAD=libenospace.so LIBENOSPACE_AVAIL=-1 sh -c "yes > test"
 
+    # limit free space to 10Gb
     LD_PRELOAD=libenospace.so LIBENOSPACE_OPT=bytes \
-        LIBENOSPACE=$((10*1024*1024*1024)) vim
+        LIBENOSPACE_AVAIL=$((10*1024*1024*1024)) vim
 
 
 Environment Variables
@@ -38,6 +40,8 @@ Environment Variables
 
         0: never enforce disk space limits
         -1: always enforce disk space limits
+        >0: disk usage limit as percentage (default) or in bytes
+            (see `LIBENOSPACE_OPT`)
 
 `LIBENOSPACE_ERRNO`
 : Sets the value to return on write failures (default: ENOSPC).
@@ -91,10 +95,10 @@ separate namespaces, under unique UIDs, bind mounting directories on a
 common disk.
 
 Isolating disk usage typically requires administrative intervention and
-allocting dedicated space to each process.
+allocating dedicated space to each process.
 
 libenospace lets processes opt into disk usage limits without requiring
-any special privileges from a common pool.
+any special privileges.
 
 Alternatives
 ------------
@@ -138,9 +142,11 @@ Create a sparse file on the disk and mount within the container:
 * accounting overhead
 
 * the quota system is designed for administrators setting limits for
-  human users, not services running under a UID
+  human users, not for services running under a dedicated UID
 
 ### fuse
+
+* requires root privileges or setuid executables
 
 [fusequota](https://github.com/floriandejonckheere/fusequota)
 
@@ -150,7 +156,8 @@ Processes can restrict the maximum writable size of a file by calling
 `setrlimit(RLIMIT_FSIZE)`.
 
 If the file size exceeds the limit, the process will be sent a `SIGXFSZ`
-signal. By default, the signal will cause the process to exit.
+signal. By default, the signal will cause the process to exit but the
+signal can be ignored:
 
 ~~~ shell
 #!/bin/bash
@@ -176,7 +183,8 @@ yes > test
 
 * only effective if the program writes to one file, e.g., a log
 
-  The process can write many files of the maximum file size.
+  The process can write many files of the maximum file size
+  until the disk space is full or the inode limit is reached.
 
 * if the maximum file size is set to 0, the process can still create 0
   byte files possibly truncating existing files
