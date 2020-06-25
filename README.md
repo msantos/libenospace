@@ -3,8 +3,7 @@ libenospace
 
 libenospace: set disk usage limits for a process
 
-libenospace works by intercepting calls to `write(2)` using
-`LD_PRELOAD`.
+libenospace works by intercepting calls to `write(2)` using `LD_PRELOAD`.
 
 Build
 -----
