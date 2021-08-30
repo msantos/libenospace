@@ -1,4 +1,4 @@
-/* Copyright (c) 2019-2020, Michael Santos <michael.santos@gmail.com>
+/* Copyright (c) 2019-2021, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -30,20 +30,21 @@
 
 void _init(void);
 
-ssize_t (*sys_write)(int fd, const void *buf, size_t count);
+static ssize_t (*sys_write)(int fd, const void *buf, size_t count);
 ssize_t write(int fd, const void *buf, size_t count);
 
-ssize_t (*sys_writev)(int fd, const struct iovec *iov, int iovcnt);
+static ssize_t (*sys_writev)(int fd, const struct iovec *iov, int iovcnt);
 ssize_t writev(int fd, const struct iovec *iov, int iovcnt);
 
-ssize_t (*sys_pwrite)(int fd, const void *buf, size_t count, off_t offset);
+static ssize_t (*sys_pwrite)(int fd, const void *buf, size_t count,
+                             off_t offset);
 ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset);
 
-ssize_t (*sys_pwritev)(int fd, const struct iovec *iov, int iovcnt,
-                       off_t offset);
+static ssize_t (*sys_pwritev)(int fd, const struct iovec *iov, int iovcnt,
+                              off_t offset);
 ssize_t pwritev(int fd, const struct iovec *iov, int iovcnt, off_t offset);
 
-int quota(int fd);
+static int quota(int fd);
 
 enum {
   LIBENOSPACE_OPT_BYTES = 1,
@@ -51,10 +52,10 @@ enum {
   LIBENOSPACE_OPT_MAX = 3,
 };
 
-size_t avail = (size_t)-1;
-int opt = LIBENOSPACE_OPT_PERCENT;
-int libenospace_errno = ENOSPC;
-char *debug;
+static size_t avail = (size_t)-1;
+static int opt = LIBENOSPACE_OPT_PERCENT;
+static int libenospace_errno = ENOSPC;
+static char *debug;
 
 void _init(void) {
   const char *err;
@@ -201,8 +202,9 @@ int quota(int fd) {
     size_t free = 100 * fs.f_bavail / fs.f_blocks;
 
     if (debug)
-      (void)fprintf(stderr, "avail:%lu free:%lu f_blocks:%lu f_bsize:%ld "
-                            "f_bavail:%lu total:%lu\n",
+      (void)fprintf(stderr,
+                    "avail:%lu free:%lu f_blocks:%lu f_bsize:%ld "
+                    "f_bavail:%lu total:%lu\n",
                     (long unsigned)avail, (long unsigned)free,
                     (long unsigned)fs.f_blocks, (long)fs.f_bsize, fs.f_bavail,
                     (unsigned)fs.f_bsize * fs.f_bavail);
