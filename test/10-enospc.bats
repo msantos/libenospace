@@ -13,7 +13,7 @@ EOF
 }
 
 @test "disk full: bytes specified" {
-  run env LD_PRELOAD=libenospace.so LIBENOSPACE_OPT=percent LIBENOSPACE_AVAIL=-1 sh -c "echo test > full"
+  run env LD_PRELOAD=libenospace.so LIBENOSPACE_OPT=bytes LIBENOSPACE_AVAIL=-1 sh -c "echo test > full"
 cat << EOF
 $output
 EOF
@@ -29,7 +29,7 @@ EOF
 }
 
 @test "disk limits disabled: bytes specified" {
-  run env LD_PRELOAD=libenospace.so LIBENOSPACE_OPT=percent LIBENOSPACE_AVAIL=0 sh -c "echo test > full"
+  run env LD_PRELOAD=libenospace.so LIBENOSPACE_OPT=bytes LIBENOSPACE_AVAIL=0 sh -c "echo test > full"
 cat << EOF
 $output
 EOF
@@ -37,7 +37,7 @@ EOF
 }
 
 @test "disk almost full: bytes specified" {
-  run env LD_PRELOAD=libenospace.so LIBENOSPACE_OPT=percent LIBENOSPACE_AVAIL=5 sh -c "echo test > full"
+  run env LD_PRELOAD=libenospace.so LIBENOSPACE_OPT=bytes LIBENOSPACE_AVAIL=5 sh -c "echo test > full"
 cat << EOF
 $output
 $(cat full)
