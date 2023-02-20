@@ -1,46 +1,46 @@
-libenospace
-===========
+# libenospace
 
 libenospace: set disk usage limits for a process
 
 libenospace works by intercepting calls to `write(2)` using `LD_PRELOAD`.
 
-Build
------
+## Build
 
-~~~
+```
 make
-~~~
+```
 
-Example
--------
+## Example
 
-    # simulate a full disk
-    LD_PRELOAD=libenospace.so LIBENOSPACE_AVAIL=-1 sh -c "yes > test"
+```
+# simulate a full disk
+LD_PRELOAD=libenospace.so LIBENOSPACE_AVAIL=-1 sh -c "yes > test"
 
-    # limit free space to 10Gb
-    LD_PRELOAD=libenospace.so LIBENOSPACE_OPT=bytes \
-        LIBENOSPACE_AVAIL=$((10*1024*1024*1024)) vim
+# limit free space to 10Gb
+LD_PRELOAD=libenospace.so LIBENOSPACE_OPT=bytes \
+    LIBENOSPACE_AVAIL=$((10*1024*1024*1024)) vim
+```
 
-
-Environment Variables
----------------------
+## Environment Variables
 
 `LIBENOSPACE_OPT`
 : Specify whether the minimum available free disk space is calculated
-  as a percentage or in bytes:
+as a percentage or in bytes:
 
-        percent: percentage of free disk space (default)
-        bytes: free disk space in bytes
-
+```
+    percent: percentage of free disk space (default)
+    bytes: free disk space in bytes
+```
 
 `LIBENOSPACE_AVAIL`
 : Set the minimum free disk space.
 
-        0: never enforce disk space limits
-        -1: always enforce disk space limits
-        >0: disk usage limit as percentage (default) or in bytes
-            (see `LIBENOSPACE_OPT`)
+```
+    0: never enforce disk space limits
+    -1: always enforce disk space limits
+    >0: disk usage limit as percentage (default) or in bytes
+        (see `LIBENOSPACE_OPT`)
+```
 
 `LIBENOSPACE_ERRNO`
 : Sets the value to return on write failures (default: ENOSPC).
@@ -48,19 +48,18 @@ Environment Variables
 `LIBENOSPACE_DEBUG`
 : Write errors and informational messages to stderr.
 
-Limitations
------------
+## Limitations
 
 * libenospace requires the program to be dynamically linked
 
   libenospace will not work with statically linked programs or programs
-  that directly make syscalls.
+  directly making syscalls.
 
 * currently libenospace only enforces usage limits on:
 
-    * extfs (ext2, ext3, ext4)
-    * ecryptfs
-    * btrfs
+  * extfs (ext2, ext3, ext4)
+  * ecryptfs
+  * btrfs
 
 * usage limits apply to all filesystems the program accesses
 
@@ -78,13 +77,14 @@ Limitations
 
 * disk usage limits apply to the following syscalls:
 
-        write(2)
-        writev(2)
-        pwrite(2)
-        pwritev(2)
+  ```
+    write(2)
+    writev(2)
+    pwrite(2)
+    pwritev(2)
+  ```
 
-Rationale
----------
+## Rationale
 
 Disk space is a shared resource. If multiple processes share disk space,
 any process can monopolize usage.
@@ -93,14 +93,13 @@ Processes may be otherwise isolated using Linux containers: running in
 separate namespaces, under unique UIDs, bind mounting directories on a
 common disk.
 
-Isolating disk usage typically requires administrative intervention and
-allocating dedicated space to each process.
+Isolating disk usage usually requires administrative intervention and
+dedicating space to each process.
 
 libenospace lets processes opt into disk usage limits without requiring
 any special privileges.
 
-Alternatives
-------------
+## Alternatives
 
 ### Bind Mounts
 
@@ -112,7 +111,7 @@ New partitions can be created for each process:
 
 * requires root privileges
 
-* a new parition must be allocated for each process
+* a new partition must be created for each process
 
 * depending on the underlying file system and volume management, may be
   inflexible and may require interruption of service
@@ -158,7 +157,7 @@ If the file size exceeds the limit, the process will be sent a `SIGXFSZ`
 signal. By default, the signal will cause the process to exit but the
 signal can be ignored:
 
-~~~ shell
+```shell
 #!/bin/bash
 
 set -o errexit
@@ -174,7 +173,7 @@ ulimit -f 0
 
 # test: File too large
 yes > test
-~~~
+```
 
 * no special privileges required
 
@@ -186,4 +185,4 @@ yes > test
   until the disk space is full or the inode limit is reached.
 
 * if the maximum file size is set to 0, the process can still create 0
-  byte files possibly truncating existing files
+  byte files and truncate existing files
