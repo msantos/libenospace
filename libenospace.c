@@ -1,4 +1,4 @@
-/* Copyright (c) 2019-2021, Michael Santos <michael.santos@gmail.com>
+/* Copyright (c) 2019-2023, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -153,7 +153,7 @@ void _init(void) {
     (void)fprintf(stderr, "libenospace:dlsym (pwritev):%s\n", err);
 }
 
-int quota(int fd) {
+static int quota(int fd) {
   int oerrno = errno;
   struct stat st = {0};
   struct statfs fs = {0};
