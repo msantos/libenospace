@@ -191,7 +191,7 @@ static int quota(int fd) {
                     (long unsigned)avail, (long)fs.f_bsize, fs.f_bavail,
                     (unsigned)fs.f_bsize * fs.f_bavail);
 
-    if (avail > (unsigned)fs.f_bsize * fs.f_bavail) {
+    if (fs.f_bsize > 0 && avail / (unsigned)fs.f_bsize > fs.f_bavail) {
       errno = libenospace_errno;
       return -1;
     }
