@@ -156,7 +156,11 @@ void _init(void) {
 static int quota(int fd) {
   int oerrno = errno;
   struct stat st = {0};
+#ifdef __linux__
+  struct statfs64 fs = {0};
+#else
   struct statfs fs = {0};
+#endif
 
   if (avail == 0)
     return 0;
@@ -167,8 +171,13 @@ static int quota(int fd) {
   if (!S_ISREG(st.st_mode))
     return 0;
 
+#ifdef __linux__
+  if (fstatfs64(fd, &fs) < 0)
+    return -1;
+#else
   if (fstatfs(fd, &fs) < 0)
     return -1;
+#endif
 
   switch (fs.f_type) {
   case EXT4_SUPER_MAGIC:
